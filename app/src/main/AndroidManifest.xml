@@ -19,6 +19,8 @@ android:supportsRtl="true"
 
 android:theme="@style/AppTheme">
 <activity android:name=".TestActivity"
+    android:hardwareAccelerated="true"
+    android:launchMode="singleInstance"
     android:screenOrientation="landscape">
     <intent-filter>
         <action android:name="android.intent.action.MAIN" />
@@ -27,6 +29,7 @@ android:theme="@style/AppTheme">
 </activity>
     <activity android:name=".JcallActivity"/>
     <!--<activity android:name=".TestActivity"/>-->
+
     <activity android:name=".MainActivity"
         android:hardwareAccelerated="true"
         android:launchMode="singleInstance"
@@ -34,5 +37,6 @@ android:theme="@style/AppTheme">
     <activity android:name=".VideoActivity"
 
         />
+    <service android:name=".DownLoadService"/>
 </application>
 </manifest>

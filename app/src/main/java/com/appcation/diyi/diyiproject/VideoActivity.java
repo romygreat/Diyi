@@ -170,8 +170,8 @@ public class VideoActivity extends AppCompatActivity implements View.OnTouchList
 //            Log.i(TAG, "onTouch: true");
 //        }
 //        finish();
-        Intent intent=new Intent(this,MainActivity.class);
-        startActivity(intent);
+//        Intent intent=new Intent(this,MainActivity.class);
+//        startActivity(intent);
         finish();
         return false;
     }

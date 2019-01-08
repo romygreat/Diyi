@@ -34,7 +34,7 @@ public class DownloadUtil {
      * @param saveDir  储存下载文件的SDCard目录
      * @param listener 下载监听
      */
-    public void download(final String url, final String saveDir, final OnDownloadListener listener) {
+    public synchronized void  download(final String url, final String saveDir, final OnDownloadListener listener) {
         Request request = new Request.Builder().url(url).build();
         okHttpClient.newCall(request).enqueue(new Callback() {
             @Override

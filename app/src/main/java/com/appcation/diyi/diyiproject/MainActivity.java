@@ -8,6 +8,7 @@ import android.os.Message;
 
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.os.PersistableBundle;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -15,6 +16,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 
+import com.tencent.smtt.export.external.interfaces.WebResourceResponse;
 import com.tencent.smtt.sdk.WebSettings;
 import com.tencent.smtt.sdk.WebView;
 import com.tencent.smtt.sdk.WebViewClient;
@@ -37,20 +39,39 @@ public class MainActivity extends Activity implements View.OnTouchListener {
     private TimerTask task;
     private int currentTime = 0;
 
-//this project is X5 frameWork is OK
+    //this project is X5 frameWork is OK
     //正常加载x5内核
     //使用fragment不能全屏问题
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        requestWindowFeature(Window.FEATURE_NO_TITLE);// 隐藏标题
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN);// 设置全屏
+        fullScreen();
         setContentView(R.layout.layout_test);
         mWebview = findViewById(R.id.webview);
 //        mWebview.loadUrl("http://119.23.63.140/shop");
         mWebview.setOnTouchListener(this);
-        mWebview.setWebViewClient(new WebViewClient());
+        Diyi_setWebSettings();
+
+        initTimer();
+    }
+
+    private void fullScreen() {
+        requestWindowFeature(Window.FEATURE_NO_TITLE);// 隐藏标题
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);// 设置全屏
+
+    }
+
+    private void Diyi_setWebSettings() {
+        mWebview.setWebViewClient(new WebViewClient(){
+            @Override
+            public void onPageFinished(WebView webView, String s) {
+                super.onPageFinished(webView, s);
+                Log.i(TAG, "onPageFinished: okhttp url=="+s);
+                startDownloadService();
+            }
+        });
+
         javaScriptinterface=new JavaScriptinterface(this);
         mWebview.loadUrl("http://om.gddiyi.com/");
         mWebview.addJavascriptInterface(javaScriptinterface,
@@ -68,19 +89,24 @@ public class MainActivity extends Activity implements View.OnTouchListener {
         settings.setGeolocationEnabled(true);
         settings.setDomStorageEnabled(true);
         settings.setDatabaseEnabled(true);
-         //白屏调优代码
+        //白屏调优代码
         mWebview.requestFocus();
         settings.setAppCacheEnabled(true);
 
         String appCachePath = getApplicationContext().getCacheDir().getPath()+ "/webcache";
-
         settings.setAppCachePath(appCachePath);
         settings.setDatabasePath(appCachePath);
-
         vedioURL=
                 "https://vdse.bdstatic.com//c28e7e9a5730e0dae8cc6b0fc5b85d00?authorization=bce-auth-v1%2Ffb297a5cc0fb434c971b8fa103e8dd7b%2F2017-05-11T09%3A02%3A31Z%2F-1%2F%2F6528af5e55ac29260b145e2080e9e2867dbd3026b21cebdd7196740a48ea7b49";
-        initTimer();
+
     }
+
+    private void startDownloadService() {
+        Intent downLoadIntent=new Intent(this,DownLoadService.class);
+        startService(downLoadIntent);
+
+    }
+
     class MyTask extends TimerTask {
         @Override
         public void run() {
@@ -97,7 +123,6 @@ public class MainActivity extends Activity implements View.OnTouchListener {
             });
         }
     }
-
     @Override
     protected void onStart() {
         super.onStart();
@@ -111,7 +136,7 @@ public class MainActivity extends Activity implements View.OnTouchListener {
                     case 1:
                         Intent intent=new Intent(MainActivity.this,VideoActivity.class);
                         startActivity(intent);
-                        finish();//添加finish()
+                     //   finish();//添加finish()
                         break;
 //                        FragmentManager fragmentManager=getFragmentManager();
 //                        videoFragment=new VideoFragment ();
@@ -131,7 +156,7 @@ public class MainActivity extends Activity implements View.OnTouchListener {
     @Override
     protected void onResume() {
         super.onResume();
-        //startTimer();
+        startTimer();
     }
 
     @Override
@@ -192,6 +217,17 @@ public class MainActivity extends Activity implements View.OnTouchListener {
     protected void onPause() {
         super.onPause();
         stopTimer();
+//        ActivityStack.getInstance().push(this);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
+        super.onSaveInstanceState(outState, outPersistentState);
+    }
+
+    @Override
+    public void onRestoreInstanceState(Bundle savedInstanceState, PersistableBundle persistentState) {
+        super.onRestoreInstanceState(savedInstanceState, persistentState);
     }
 }
 

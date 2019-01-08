@@ -48,7 +48,8 @@ public class JcallActivity extends Activity implements View.OnTouchListener {
             case R.id.download:
 //                file:///sdcard/test.mp4
                 DownloadUtil downloadUtil=DownloadUtil.get();
-                vedioURL="https://pic.ibaotu.com/01/07/52/39W888piC3ty.mp4";
+//                vedioURL="https://pic.ibaotu.com/01/07/52/39W888piC3ty.mp4";
+              //  vedioURL="";
                 downloadUtil.download(vedioURL, "zdiyi", new DownloadUtil.OnDownloadListener() {
                     @Override
                     public void onDownloadSuccess() {
